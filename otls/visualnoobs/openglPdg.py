@@ -1,4 +1,6 @@
 import hou
+import os
+import flipbookGenerator
 
 
 class TopsOperations:
@@ -15,7 +17,7 @@ class TopsOperations:
 		for children in fb_nodes:
 			# Find the top node type
 			if "topnetmgr" == children.type().name():
-				# Get the wedge node
+				# Get the top node
 				top = children
 
 		return top
@@ -71,3 +73,19 @@ class TopsOperations:
 			hou.pwd().parm("image").set(0)
 			hou.pwd().parm("wdg").set(0)
 
+
+class FlipbookPdg:
+	def ffmpeg_basename(self, output_path):
+		out = output_path
+		name = flipbookGenerator.WalkIntoDirs().version_increment_flipbook()
+
+		for pdg in TopsOperations().top_node().children():
+			if "ffmpegencodevideo" == pdg.type().name():
+				ffmpeg = pdg
+
+		ffmpeg.parm("outputfilepath").set(f"{out}{name}.mp4")
+
+	def cook_nodes(self):
+		TopsOperations().top_node().generateStaticWorkItems(block=True)
+		TopsOperations().top_node().cookOutputWorkItems(block=True)
+		TopsOperations().top_node().dirtyAllWorkItems(False)
