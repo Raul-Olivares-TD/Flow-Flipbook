@@ -268,8 +268,13 @@ class FlipbookPdg:
 		ffmpeg.parm("outputfilepath").set(f"{out}{name}.mp4")
 
 	def cook_nodes(self):
-		TopsOperations().top_node().generateStaticWorkItems(block=True)
-		time.sleep(0.5)
-		TopsOperations().top_node().cookOutputWorkItems(block=True)
 		TopsOperations().top_node().dirtyAllWorkItems(False)
+		TopsOperations().top_node().generateStaticWorkItems()
+		time.sleep(0.5)
+		TopsOperations().top_node().cookOutputWorkItems()
 
+	def finish_flipbook_pdg(self):
+		hou.ui.displayMessage("Flipbook Finished")
+		hou.pwd().parm("f").hide(True)
+  
+  
