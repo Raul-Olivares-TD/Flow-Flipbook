@@ -55,36 +55,43 @@ class Flow:
 		return tasks
 
 	def shots(self):
+		"""Creates the shots names from the tasks.
+		
+		:return: A list with the shots names.
+		:rtype: list
+		"""
 		shots = [shot["content"] for shot in self.tasks()]
 
 		return shots
 
 	def sequences(self):
+		"""Creates the sequences names from the tasks.
+		
+		:return: A list with the sequences names.
+		:rtype: list
+		"""
 		sequence = [sequence["entity"]["name"].split("_")[0]
 				    for sequence in self.tasks()]
   		
 		return sequence
 
 	def tasks_name(self):
+		"""Creates the tasks name from the tasks.
+		
+		:return: A list with the tasks names.
+		:rtype: list
+		"""
 		task = [task["content"] for task in self.tasks()]
 
 		return task
 
 	def project_name(self):
+		"""Creates the projects name from the tasks.
+		
+		:return: A list with the projects names.
+		:rtype: list
+		"""
 		project = [project["project"]["name"] for project in self.tasks()]
 
 		return project
 
-# p = Flow().projects()
-
-# t = Flow().tasks()
-
-# sh = Flow().shots()
-
-# sq = Flow().sequences()
-
-# t = Flow().tasks_name()
-
-# pn = Flow().project_name()
-
-# print(pn)
