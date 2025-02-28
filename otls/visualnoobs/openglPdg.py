@@ -254,6 +254,17 @@ class TopsOperations:
 			except:
 				pass
 
+	def generate_wedge(self):
+
+		wedge = self.wedge_activate()
+
+		self.top_node().generateStaticWorkItems(block=True)
+
+		pdg_node = wedge.getPDGNode()
+		work_item = pdg_node.workItems[0].id
+
+		wedge.setSelectedWorkItem(work_item)
+	
 
 class FlipbookPdg:
 	def ffmpeg_basename(self, output_path):
@@ -268,13 +279,12 @@ class FlipbookPdg:
 		ffmpeg.parm("outputfilepath").set(f"{out}{name}.mp4")
 
 	def cook_nodes(self):
-		TopsOperations().top_node().dirtyAllWorkItems(False)
-		TopsOperations().top_node().generateStaticWorkItems()
-		time.sleep(0.5)
 		TopsOperations().top_node().cookOutputWorkItems()
+		time.sleep(1)
+		TopsOperations().top_node().layoutChildren()
 
 	def finish_flipbook_pdg(self):
 		hou.ui.displayMessage("Flipbook Finished")
-		hou.pwd().parm("f").hide(True)
-  
+		hou.pwd().parm("f").hide(True) 
+		
   

@@ -85,6 +85,8 @@ class Flipbook:
         self.fb_stash.resolution(res)
         # Sets the output from export the files
         self.fb_stash.output(f"{out}test_$F4.png")
+        # MPlay deactivate
+        self.fb_stash.outputToMPlay(False)
         # Exec the flipbook with the stash settings
         self.scene_viewer.flipbook(settings=self.fb_stash)
             
@@ -141,4 +143,5 @@ class WalkIntoDirs:
         flipbook_file = f"{name}_{version}"
         
         return flipbook_file      
-        
+       
+       
