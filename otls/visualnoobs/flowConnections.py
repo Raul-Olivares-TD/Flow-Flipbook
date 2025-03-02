@@ -1,3 +1,4 @@
+import flipbookGenerator
 import os
 import shotgun_api3
 
@@ -60,7 +61,8 @@ class Flow:
 		:return: A list with the shots names.
 		:rtype: list
 		"""
-		shots = [shot["content"] for shot in self.tasks()]
+		# Gets the id, name, type of the shots
+		shots = [shot["entity"] for shot in self.tasks()]
 
 		return shots
 
@@ -81,7 +83,8 @@ class Flow:
 		:return: A list with the tasks names.
 		:rtype: list
 		"""
-		task = [task["content"] for task in self.tasks()]
+		# task = [task["content"] for task in self.tasks()]
+		task = {task["content"] : task["id"] for task in self.tasks()}
 
 		return task
 
@@ -91,7 +94,36 @@ class Flow:
 		:return: A list with the projects names.
 		:rtype: list
 		"""
-		project = [project["project"]["name"] for project in self.tasks()]
+		# project = [project["project"]["name"] for project in self.tasks()]
+		project = {project["name"] : project["id"] 
+             	   for project in self.projects()}
 
 		return project
+
+	def upload_flipbook(self):
+     
+		project_name = hou.pwd().parm("project").evalAsString()		
+		task_name = hou.pwd().parm("task").evalAsString()
+		description = hou.pwd().parm("desc").evalAsString()
+		outpath = hou.pwd().parm("out").evalAsString()
+		basename = flipbookGenerator.WalkIntoDirs().version_increment_flipbook()
+  
+		project_id = Flow().project_name()[project_name]
+		task_id = Flow().tasks_name()[task_name]
+		self.projects()
+		user_id = self.user_data["id"]
+  
+		data = {
+			"project": {"type": "Project", "id": project_id},
+			"sg_task": {"type": "Task", "id": task_id},
+			"code": "fxDesintegracion_v004",
+			"description": description,
+			"user": {"type": "HumanUser", "id": user_id}
+		}
+  
+		r = self.sg.create("Version",data, return_fields=["id"])
+    
+		movie = f"{outpath}{basename}"
+  
+		up = self.sg.upload("Version", r["id"], movie, field_name="sg_uploaded_movie")
 
