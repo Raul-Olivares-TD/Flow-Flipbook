@@ -148,6 +148,8 @@ class WalkIntoDirs:
 
 class Parameters:
     def menu_project(self):
+        """Creates the project menu data from flow."""
+        
         projects = flowConnections.Flow().projects()
 
         token = []
@@ -170,6 +172,8 @@ class Parameters:
             
     
     def menu_sequence(self):
+        """Creates the sequence menu data from flow."""
+        
         sequences = flowConnections.Flow().sequences()
 
         token = []
@@ -193,6 +197,8 @@ class Parameters:
         node_type.setParmTemplateGroup(group)
     
     def menu_shot(self):
+        """Creates the shot menu data from flow."""    
+        
         shots = flowConnections.Flow().shots()
 
         token = []
@@ -217,6 +223,8 @@ class Parameters:
         node_type.setParmTemplateGroup(group)
     
     def menu_task(self):
+        """Creates the task menu data from flow."""
+        
         tasks = flowConnections.Flow().tasks()
 
         token = []
@@ -238,6 +246,10 @@ class Parameters:
         node_type.setParmTemplateGroup(group)
         
     def menu_parameters_default(self):
+        """Sets the parameters of each flow menu based on the current values
+        ​​of the scene you are working on.
+        """
+        
         basename = hou.hipFile.basename()
         basename_split = basename.split("_")
         project = basename_split[0]
@@ -264,3 +276,5 @@ class Parameters:
         label_task = hou.pwd().parm("task").menuLabels()
         index_task = label_task.index(task)
         sets_task = hou.pwd().parm("task").set(index_task) 
+        
+        
