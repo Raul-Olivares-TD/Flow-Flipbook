@@ -84,6 +84,7 @@ class TopsOperations:
 
 	def wedging(self):
 		""" Pass the parameters to creates wedges from the HDA to the wedge node."""
+  
 		wdgatt = hou.pwd().parm("wdgatt").eval()
 		wedge_node = self.wedge_activate()
 
@@ -255,7 +256,11 @@ class TopsOperations:
 				pass
 
 	def generate_wedge(self):
-
+		"""Creates the wedge from the HDA to the wedge node and
+		generates the static work items to work correctly with the
+		expresions like @wedgeindex...
+    	"""
+     
 		wedge = self.wedge_activate()
 
 		self.top_node().generateStaticWorkItems(block=True)
@@ -268,6 +273,8 @@ class TopsOperations:
 
 class FlipbookPdg:
 	def ffmpeg_basename(self, output_path):
+		"""Creates and sets the path to save the ffmpeg file correctly."""
+  
 		out = output_path
 		name = flipbookGenerator.WalkIntoDirs().version_increment_flipbook()
 
@@ -279,11 +286,13 @@ class FlipbookPdg:
 		ffmpeg.parm("outputfilepath").set(f"{out}{name}.mp4")
 
 	def cook_nodes(self):
+		"""Launch the cook process for creates the flipbook."""
+  
 		TopsOperations().top_node().cookOutputWorkItems()
-		time.sleep(1)
 		TopsOperations().top_node().layoutChildren()
 
 	def finish_flipbook_pdg(self):
+		"""When the flipbook finishes show a display message."""
 		hou.ui.displayMessage("Flipbook Finished")
 		hou.pwd().parm("f").hide(True) 
 		
