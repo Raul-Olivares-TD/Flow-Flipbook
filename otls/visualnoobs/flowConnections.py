@@ -1,4 +1,5 @@
 import flipbookGenerator
+import hou
 import os
 import shotgun_api3
 
@@ -107,15 +108,16 @@ class Flow:
 
 		return project
 
-	def upload_flipbook(self):
+	def upload_flipbook(self, outputpath):
 		"""Upload the flipbook to flow getting the data from houdini.
 		But first creates the version and after upload the flipbook to Flow.
+  
+		:param output_path: Path where the file are
   		"""
     
 		project_name = hou.pwd().parm("project").evalAsString()		
 		task_name = hou.pwd().parm("task").evalAsString()
 		description = hou.pwd().parm("desc").evalAsString()
-		outpath = hou.pwd().parm("out").evalAsString()
 		basename = flipbookGenerator.WalkIntoDirs().version_increment_flipbook()
   
 		project_id = Flow().project_data()[project_name]
@@ -128,14 +130,16 @@ class Flow:
 			"sg_task": {"type": "Task", "id": task_id},
 			"code": "fxDesintegracion_v004",
 			"description": description,
+			"sg_status_list": "rev",
 			"user": {"type": "HumanUser", "id": user_id}
 		}
 
 		# Creates the version of the mp4 first
 		r = self.sg.create("Version",data, return_fields=["id"])
-    
-		movie = f"{outpath}{basename}"
+
+		movie = f"{outputpath}{basename}.mp4"
 
 		# Upload the flipbook at the version creates before
-		up = self.sg.upload("Version", r["id"], movie, field_name="sg_uploaded_movie")
+		up = self.sg.upload("Version", r["id"], movie, 
+                      		field_name="sg_uploaded_movie")
 

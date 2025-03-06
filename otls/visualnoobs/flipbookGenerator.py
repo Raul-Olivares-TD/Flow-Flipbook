@@ -104,7 +104,7 @@ class Converter:
         # Gets the basename with correct version from WalkIntoDirs class
         version = WalkIntoDirs().version_increment_flipbook()
         # Fuse the out paths with the version and video extension
-        file_mp4 = f"{out}_{version}.mp4"
+        file_mp4 = f"{out}{version}.mp4"
         # Gets the path to search the images
         input_file = ffmpeg.input(f"{out}test_%04d.png")
         # Sets the path to export the flipbook video
