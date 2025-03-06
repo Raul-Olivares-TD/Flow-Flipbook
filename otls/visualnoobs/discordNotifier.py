@@ -1,3 +1,4 @@
+import hou
 import os
 import requests
 
@@ -11,16 +12,21 @@ class DiscordConnections:
         }
 
     def flipbok_notifier(self):
-        channel_id = "1038419404184100909"
-
+        """Creates the flipbook upload notification for send it at discord."""
+        
+        channel_id = os.environ["DISCORD_CHANNEL"]
+    
         endpoint = f"https://discordapp.com/api/channels/{channel_id}/messages"
 
-        user_id = "309690259753533440"
+        user_id = os.environ["DISCORD_USER"]
+        
+        project = hou.pwd().parm("project").evalAsString()
+        task = hou.pwd().parm("task").evalAsString()
 
         payload = {
-            "content" : f"<@{user_id}> a subido un flipbook para revisar.", 
+            "content" : f"**{user_id}** uploaded a new flipbook version to "
+            f"review of the task `{task}` from the project `{project}`", 
         }
 
         post = requests.post(endpoint,json=payload, headers=self.headers)
-        
         
