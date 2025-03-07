@@ -1,6 +1,6 @@
 import ffmpeg
 import flowConnections
-import hou
+import hou # type: ignore
 import os
 from pathlib import Path
 
@@ -98,20 +98,27 @@ class Converter:
 
         :param output_path: Path to save the flipbook, images...
         """
-
-        # Gets the output path argument
-        out = output_path
-        # Gets the basename with correct version from WalkIntoDirs class
-        version = WalkIntoDirs().version_increment_flipbook()
-        # Fuse the out paths with the version and video extension
-        file_mp4 = f"{out}{version}.mp4"
-        # Gets the path to search the images
-        input_file = ffmpeg.input(f"{out}test_%04d.png")
-        # Sets the path to export the flipbook video
-        output_file = input_file.output(file_mp4)
-        # Exec the convert
-        output_file.run()
-                
+        try:
+            # Gets the output path argument
+            out = output_path
+            # Gets the start frame
+            str_frame = hou.pwd().parm("frames1").eval()
+            # Gets the basename with correct version from WalkIntoDirs class
+            version = WalkIntoDirs().version_increment_flipbook()
+            # Fuse the out paths with the version and video extension
+            file_mp4 = f"{out}{version}.mp4"
+            # Gets the path to search the images
+            input_file = ffmpeg.input(f"{out}test_%04d.png", 
+                                      start_number=str_frame)
+            # Sets the path to export the flipbook video
+            output_file = input_file.output(file_mp4,vcodec="h264_nvenc", 
+                                            preset="p4", pix_fmt="yuv420p")
+            # Exec the convert
+            output_file.run(capture_stdout=True, capture_stderr=True, 
+                            overwrite_output=True)
+        except ffmpeg.Error as e:
+            print("stdout:", e.stdout.decode("utf8"))
+            print("stderr:", e.stderr.decode("utf8"))
         
 class WalkIntoDirs:
     def remove_images(self, output_path):
