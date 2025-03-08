@@ -3,7 +3,7 @@
 - This tool creates a flipbook in Houdini upload it to Flow and Notify via Discord.
 - This tool is complemented by the Scene Builder to continue with the small development of the pipeline.
 	- Creates a scene with all configured for the artist. (Scene Builder)
-	- Upload flipbooks reviews to Flow. (Flipbook to Flow)
+	- Upload flipbooks to review at Flow. (Flipbook to Flow)
 	- Upload assets to Flow. (Coming Soon)
 - This tool allows you to create two types of flipbooks.
 	- Traditional flipbook.
